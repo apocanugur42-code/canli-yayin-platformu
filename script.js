@@ -1,12 +1,10 @@
+// Buttplug.io kütüphanesini yükle
+const script = document.createElement('script');
+script.src = "https://cdn.jsdelivr.net/npm/buttplug@latest/dist/web/buttplug.min.js";
+document.head.appendChild(script);
+
+// Butona tıklandığında cihazı titreten komut
 document.getElementById('connectBtn').addEventListener('click', async () => {
-    try {
-        // Buttplug.io Web Bluetooth taramasını başlat
-        const device = await navigator.bluetooth.requestDevice({
-            filters: [{ services: ['battery_service'] }], // Örnek filtre, cihazına göre değişebilir
-            optionalServices: ['generic_access']
-        });
-        alert("Bağlantı başarılı: " + device.name);
-    } catch (error) {
-        alert("Bağlantı hatası: " + error);
-    }
+    alert("Vibe aktif ediliyor...");
+    // Cihazı bağlayıp titreşim komutu gönderecek olan asıl kodlar buraya gelecek
 });
