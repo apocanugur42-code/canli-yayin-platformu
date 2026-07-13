@@ -2,26 +2,41 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Vibe - Canlı Yayın Platformu</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3257/3257375.png">
-    <meta name="theme-color" content="#ff007f">
+    <title>Vibe Platform</title>
+    <!-- Kütüphaneyi en başa alıyoruz -->
+    <script src="https://cdn.jsdelivr.net/npm/buttplug@3.0.0/dist/web/buttplug.min.js"></script>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 20px; background: #121212; color: white; }
-        #video-player { background: black; width: 100%; max-width: 600px; height: 300px; margin: 20px auto; display: flex; align-items: center; justify-content: center; border: 2px solid #ff007f; }
-        button { padding: 20px 40px; font-size: 18px; cursor: pointer; border-radius: 10px; border: none; background: #ff007f; color: white; margin-top: 10px; }
+        body { background: #121212; color: white; text-align: center; padding: 20px; }
+        button { padding: 20px; background: #ff007f; border: none; color: white; border-radius: 10px; font-size: 18px; }
     </style>
 </head>
 <body>
     <h1>Vibe Platform</h1>
-    <div id="video-player">
-        <p>Yayın Bekleniyor...</p>
-    </div>
     <button id="connectBtn">Cihazı Bağla</button>
-    
-    <!-- Buttplug Kütüphanesini doğrudan buraya ekledik -->
-    <script src="https://cdn.jsdelivr.net/npm/buttplug@latest/dist/web/buttplug.min.js"></script>
-    <script src="script.js"></script>
+
+    <script>
+        document.getElementById('connectBtn').addEventListener('click', async () => {
+            // Tarayıcıdaki global Buttplug nesnesini kullan
+            if (typeof Buttplug === 'undefined') {
+                alert("Kütüphane yüklenemedi! Sayfayı tekrar yenile.");
+                return;
+            }
+
+            try {
+                const client = new Buttplug.ButtplugClient("Vibe Client");
+                const connector = new Buttplug.ButtplugBrowserWebBluetoothConnector();
+                await client.connect(connector);
+                await client.startScanning();
+                alert("Tarama başladı, lütfen cihazını eşleştir!");
+                
+                client.addListener("deviceadded", (device) => {
+                    alert("Bağlandı: " + device.name);
+                    device.vibrate(1.0);
+                });
+            } catch (e) {
+                alert("Hata: " + e.message);
+            }
+        });
+    </script>
 </body>
 </html>
-
