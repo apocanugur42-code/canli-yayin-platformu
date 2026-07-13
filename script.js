@@ -1,23 +1,29 @@
+// Kütüphaneyi Global olarak tanımla
+const Buttplug = window.Buttplug;
+
 document.getElementById('connectBtn').addEventListener('click', async () => {
     try {
-        // Buttplug.io Client Başlatma
+        // Kontrol et
+        if (!Buttplug) {
+            alert("Hata: Kütüphane yüklenemedi, lütfen sayfayı yenile!");
+            return;
+        }
+
         const client = new Buttplug.ButtplugClient("Vibe Platform");
         const connector = new Buttplug.ButtplugBrowserWebBluetoothConnector();
         
         await client.connect(connector);
-        alert("Bağlantı kuruldu, cihaz aranıyor. Lütfen cihazını eşleşme moduna getir!");
+        alert("Bağlantı başarılı! Cihaz aranıyor...");
         
         await client.startScanning();
         
         client.addListener("deviceadded", (device) => {
-            alert("Harika! Bağlandı: " + device.name);
-            // Cihaz bağlandığında otomatik 1 saniye titreşim testi
+            alert("Bağlandı: " + device.name);
             device.vibrate(1.0);
             setTimeout(() => device.vibrate(0.0), 1000);
         });
         
     } catch (e) {
-        alert("Bağlantı Hatası: " + e.message);
-        console.error(e);
+        alert("Hata: " + e.message);
     }
 });
